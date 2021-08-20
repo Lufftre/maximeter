@@ -1,5 +1,5 @@
 from socketcan import CanFrame
-
+import struct
 
 def to_can_id(pgn, src, dst, prio):
     can_id = src & 0xff | 0x80000000
@@ -13,6 +13,17 @@ def to_can_id(pgn, src, dst, prio):
 
     can_id |= prio << 26
     return can_id
+
+
+def from_can_id(can_id):
+    src = 0xff & can_id
+    can_id >>= 8
+
+    pgn = 0x3ffff & can_id
+    can_id >>= 18
+
+    prio = 0b111 & can_id
+    return src, pgn, prio
 
 
 def iso_address_claim(src=35, dst=255, prio=6):
@@ -31,7 +42,7 @@ def humidity_data(sid, instance, source, actual_humidity, set_humidity):
 
 def polar_performance(percentage, src=35, dst=255, prio=3):
     can_id = to_can_id(130313, src, dst, prio)
-    data = humidity_data(0xff, 0x01, 0x01, percentage, 0)
+    data = humidity_data(0xff, 0x01, 0x01, round(percentage), 0)
     frame = CanFrame(can_id=can_id, data=data)
     return frame
 

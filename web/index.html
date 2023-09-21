@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body style="display: flex">
+        <div id="polar"></div>
+
+        <div id="data" style="display: flex; flex-direction: column">
+            <div>
+                <b>TWS:</b>
+                <u id="tws"></u>
+            </div>
+            <div>
+                <b>AWA:</b>
+                <u id="awa"></u>
+            </div>
+            <div>
+                <b>STW:</b>
+                <u id="stw"></u>
+            </div>
+        </div>
+        <script type="module" src="plot.ts"></script>
+        <script type="module" src="data.ts"></script>
+    </body>
+</html>

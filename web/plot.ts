@@ -2,17 +2,15 @@ import * as d3 from 'd3'
 import { scaleLinear } from 'd3-scale'
 import { curveCardinal, lineRadial, symbol, symbolCircle, symbolDiamond } from 'd3-shape'
 import { zip } from 'd3-array'
+import { populate_table } from './table'
 
 const width = 400
 const height = 800
-const marginTop = 20
-const marginRight = 30
-const marginBottom = 30
-const marginLeft = 40
 
 const response = await fetch('http://jieter.github.io/orc-data/site/data/NOR/NOR3325.json')
 const dataset = (await response.json()).vpp
 const colors = ['blue', 'orange', 'green', 'red', 'purple', 'teal', 'pink']
+populate_table(dataset, colors)
 
 const svg = d3
     .select('#polar')
@@ -21,7 +19,7 @@ const svg = d3
     .attr('height', height)
     .attr('style', 'font: 10px sans-serif; overflow: visible;')
     .append('g')
-    .attr('transform', `translate(30, ${height / 2.2})`)
+    .attr('transform', `translate(30, ${height / 3})`)
 
 const radius = function () {
     return Math.min(height / 1.8 - 20, width) - 15
@@ -60,7 +58,7 @@ graph.append('line').attr('x1', r(1)).attr('x2', radius()).attr('style', 'stroke
 
 const xaxis = function (selection) {
     selection
-        .attr('x', radius() + 6)
+        .attr('x', r(9))
         .attr('dy', '.35em')
         .attr('transform', (d) => (d > 90 ? `rotate(0 ${radius() + 8}, 0)` : null))
         .text((bearing) => `${bearing}°`)
@@ -109,15 +107,17 @@ var scatter = function (shape?, size?) {
     return function (s) {
         s.attr('transform', (d) => `translate(${r(d[1]) * Math.sin(d[0])}, ${r(d[1]) * -Math.cos(d[0])})`)
         s.attr('d', symbol(shape || symbolDiamond, size || 32))
-        s.attr('style', (d, i) => `fill: none; stroke: ${colors[i]};`)
+        s.attr('style', `fill: none;`)
+        // s.attr('style', (d, i) => `fill: none; stroke: ${colors[i]};`)
     }
 }
 
 var scatterText = function (shape?, size?) {
     return function (s) {
-        s.attr('transform', (d) => `translate(${-30}, ${r(d[1]) * -Math.cos(d[0]) + 4})`)
-            .text((d, i) => `${dataset.speeds[i]}kts`)
-            .attr('style', (d, i) => `fill: ${colors[i]};`)
+        s.attr('transform', (d) => `translate(${-30}, ${r(d[1]) * -Math.cos(d[0]) + 4})`).text(
+            (d, i) => `${dataset.speeds[i]}kts`,
+        )
+        // .attr('style', (d, i) => `fill: ${colors[i]};`)
     }
 }
 const { vpp_data, run_data } = seriesFromVpp(dataset)
@@ -129,7 +129,6 @@ var tws_series = function (cssClass) {
 var run_points = svg.selectAll('.vmg-run').data(run_data)
 run_points.exit().remove()
 run_points.enter().append('path').call(tws_series('vmg-run')).merge(run_points).call(scatter())
-// .attr('style', 'fill: none; stroke: black;')
 run_points.enter().append('text').call(tws_series('vmg-run')).merge(run_points).call(scatterText())
 
 var lines = svg.selectAll('.line').data(vpp_data)
@@ -140,22 +139,5 @@ lines
     .call(tws_series('line'))
     .merge(lines)
     .attr('d', line)
-    .attr('style', (d, i) => `fill: none; stroke: ${colors[i]};`)
-
-// const twsScale = svg
-//     .append('g')
-//     .selectAll('g')
-//     .data(dataset.speeds)
-//     .enter()
-//     .append('g')
-//     // .attr('class', (d) => `r axis sog-${d}`)
-//     .attr('style', 'fill: none; stroke: #777; stroke-dasharray: 1, 4;')
-
-// twsScale.append('circle').attr('r', r)
-// lines
-//     .append('text')
-//     .attr('y', (speed) => -r(speed) - 2)
-//     // .attr('transform', 'rotate(10)')
-//     .style('text-anchor', 'middle')
-//     .text((speed) => (speed <= 10 ? `${speed}kts` : '')) // show labels up to 10kts
-//     .attr('style', 'fill: black; stroke: none; stroke-dasharray: none;')
+    .attr('style', (d, i) => `fill: none;`)
+// .attr('style', (d, i) => `fill: none; stroke: ${colors[i]};`)

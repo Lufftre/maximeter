@@ -2,12 +2,19 @@ import asyncio
 import json
 import random
 import websockets
-stw = 0
+last_seen_data = {
+    "stw": 0,
+    "sog": 0,
+    "tws": 0,
+    "aws": 0,
+    "twa": 0,
+    "awa": 0,
+}
+
 connections = [None] * 16
 
 
 async def tcp_echo_client():
-    global stw
     reader, writer = await asyncio.open_connection(
         '127.0.0.1', 2598)
 
@@ -20,10 +27,11 @@ async def tcp_echo_client():
         pgn = data_json.get("pgn")
         if pgn == 128259:
             stw = data_json["fields"]["Speed Water Referenced"] + random.random()*3
+            last_seen_data["stw"] = stw
             for ws in connections:
                 if not ws:
                     continue
-                await ws.send(json.dumps({"stw": stw}))
+                await ws.send(json.dumps(last_seen_data))
             print(stw)
 
     print('Close the connection')

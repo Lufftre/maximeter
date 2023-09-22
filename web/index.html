@@ -1,27 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <link rel="stylesheet" href="style.css" />
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
     </head>
-    <body style="display: flex">
-        <div id="polar"></div>
+    <body>
+        <div id="data">
+            <div id="live">
+                <table>
+                    <tr>
+                        <td class="label">STW</td>
+                        <td id="stw">5.23</td>
+                        <td class="label">SOG</td>
+                        <td id="sog">6.23</td>
+                    </tr>
+                    <tr>
+                        <td class="label">TWS</td>
+                        <td id="tws">23.42</td>
+                        <td class="label">AWS</td>
+                        <td id="aws">20.11</td>
+                    </tr>
+                    <tr>
+                        <td class="label">TWA</td>
+                        <td id="twa">352</td>
+                        <td class="label">AWA</td>
+                        <td id="awa">34</td>
+                    </tr>
+                </table>
+            </div>
 
-        <div id="data" style="display: flex; flex-direction: column">
-            <div>
-                <b>TWS:</b>
-                <u id="tws"></u>
-            </div>
-            <div>
-                <b>AWA:</b>
-                <u id="awa"></u>
-            </div>
-            <div>
-                <b>STW:</b>
-                <u id="stw"></u>
+            <div id="polar-table">
+                <table>
+                    <thead></thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
+        <div id="polar"></div>
         <script type="module" src="plot.ts"></script>
         <script type="module" src="data.ts"></script>
     </body>

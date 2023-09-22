@@ -1,0 +1,95 @@
+html,
+body {
+    font-family: andale mono, monospace;
+    display: flex;
+    /* margin: 0; */
+    height: 100%;
+    overflow-y: hidden;
+}
+#data {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#live {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+#live table {
+    width: 100%;
+    font-size: 16pt;
+    /* text-align: center; */
+}
+#live table td {
+    padding: 10px;
+}
+.label {
+    width: 50px;
+    font-size: 12pt;
+}
+#live u {
+    text-decoration: none;
+    font-size: 20pt;
+}
+
+#polar-table {
+    text-align: center;
+    margin: auto;
+}
+#polar-table table {
+    border-collapse: collapse;
+}
+#polar-table tr {
+    border-bottom: 1pt solid black;
+}
+#polar-table td {
+    padding: 10px 6px;
+}
+
+.tws-6 {
+    fill: blue;
+    color: blue;
+    stroke: blue;
+}
+
+.tws-8 {
+    fill: orange;
+    color: orange;
+    stroke: orange;
+}
+
+.tws-10 {
+    fill: green;
+    color: green;
+    stroke: green;
+}
+
+.tws-12 {
+    fill: red;
+    color: red;
+    stroke: red;
+}
+
+.tws-14 {
+    fill: purple;
+    color: purple;
+    stroke: purple;
+}
+
+.tws-16 {
+    fill: teal;
+    color: teal;
+    stroke: teal;
+}
+
+.tws-20 {
+    fill: pink;
+    color: pink;
+    stroke: pink;
+}
+
+text {
+    stroke: none !important;
+}

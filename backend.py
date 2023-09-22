@@ -26,7 +26,11 @@ async def tcp_echo_client():
 
         pgn = data_json.get("pgn")
         if pgn == 128259:
-            stw = data_json["fields"]["Speed Water Referenced"] + random.random()*3
+            try:
+                stw = data_json["fields"]["Speed Water Referenced"]
+            except Exception as error:
+                print(error)
+                stw = 0
             last_seen_data["stw"] = stw
             for ws in connections:
                 if not ws:

@@ -7,7 +7,7 @@ import { populate_table } from './table'
 const width = 400
 const height = 800
 
-const response = await fetch('http://jieter.github.io/orc-data/site/data/NOR/NOR3325.json')
+const response = await fetch('/polar.json')
 const dataset = (await response.json()).vpp
 const colors = ['blue', 'orange', 'green', 'red', 'purple', 'teal', 'pink']
 populate_table(dataset, colors)

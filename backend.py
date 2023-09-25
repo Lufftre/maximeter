@@ -1,7 +1,7 @@
 import asyncio
 import json
-import random
 import websockets
+from db import insert_data
 last_seen_data = {
     "stw": 0,
     "sog": 0,
@@ -9,6 +9,8 @@ last_seen_data = {
     "aws": 0,
     "twa": 0,
     "awa": 0,
+    "lat": 0,
+    "lon": 0
 }
 
 connections = [None] * 16
@@ -20,23 +22,48 @@ async def tcp_echo_client():
 
     while True:
         data = await reader.read(2048)
-        data_json = json.loads(data)
-        if not data:
-            break
+        try:
+            data_json = json.loads(data)
+        except Exception:
+            continue
 
-        pgn = data_json.get("pgn")
-        if pgn == 128259:
-            stw = data_json["fields"]["Speed Water Referenced"] + random.random()*3
-            last_seen_data["stw"] = stw
+        try:
+            pgn = data_json.get("pgn")
+            if pgn == 130306:
+                ref, speed, angle = parse_wind(data_json)
+                if ref == "Apparent":
+                    last_seen_data["awa"] = angle
+                    last_seen_data["aws"] = speed
+                else:
+                    last_seen_data["twa"] = angle
+                    last_seen_data["tws"] = speed
+
+            elif pgn == 128259:
+                speed = parse_speed(data_json)
+                last_seen_data["stw"] = speed
+                insert_data(last_seen_data)
             for ws in connections:
                 if not ws:
                     continue
                 await ws.send(json.dumps(last_seen_data))
-            print(stw)
+        except Exception as error:
+            print(error)
 
     print('Close the connection')
     writer.close()
     await writer.wait_closed()
+
+
+def parse_wind(data):
+    ref = data["fields"]["Reference"]["name"]
+    speed = data["fields"]["Wind Speed"]
+    angle = data["fields"]["Wind Angle"]
+    return ref, speed, angle
+
+
+def parse_speed(data):
+    speed = data["fields"]["Speed Water Referenced"]
+    return speed
 
 
 async def handler(websocket):
